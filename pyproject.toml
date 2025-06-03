@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "airoh"
@@ -14,3 +14,16 @@ dependencies = ["invoke>=2.0"]
 
 [project.urls]
 Homepage = "https://github.com/simexp/airoh"
+Issues = "https://github.com/SIMEXP/airoh/issues"
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+select = ["I"]  # E = pycodestyle, F = pyflakes, I = isort
+
+[tool.hatch.envs.dev]
+dependencies = [
+"invoke>=2.0",
+"ruff>=0.1.0",
+"pytest>=7.0"
+]
