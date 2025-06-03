@@ -15,7 +15,7 @@ pip install -e .
 
 ## Usage
 
-You can use `airoh` in your project simply by importing tasks in your `tasks.py` file. 
+You can use `airoh` in your project simply by importing tasks in your `tasks.py` file.
 
 ### Minimal Example
 
@@ -47,6 +47,10 @@ invoke setup-env-python
 * `setup-env-python` — Install Python dependencies from a file
 * `run-figures` — Run Jupyter notebooks to generate figures
 * `clean_folder(...)` — Utility to recursively delete directories (not a task)
+
+### From `datalad.py`
+* `get-data` — Install and retrieve a subdataset listed in `invoke.yaml`
+* `import-archive` — Download a remote archive (e.g. from Zenodo), extract its contents with `datalad`, and optionally drop the original file
 
 ## Requirements
 

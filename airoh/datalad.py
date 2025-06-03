@@ -26,21 +26,39 @@ def get_data(c, name):
     print("✅ Done.")
 
 @task
-def import_archive(c, url, archive_name=None, target_dir=".", drop_archive=False):
+def import_file(c, url, output_file):
     """
-    Download a remote archive (e.g. from Zenodo) and extract its content with Datalad.
+    Download a single file using Datalad and save it to the given output path.
 
     Parameters:
-        url (str): URL to the archive (e.g. .zip, .tar.gz)
-        archive_name (str): Optional filename (default: basename of URL)
-        target_dir (str): Directory to extract into (default: current dir)
-        drop_archive (bool): Whether to drop the original archive from annex after extraction
+        url (str): URL to the file
+        output_file (str): Desired filename or full output path to save the downloaded file
+    """
+    print(f"🌐 Downloading file from: {url}")
+    c.run(f"datalad download-url -O {shlex.quote(output_path)} {shlex.quote(url)}")
+    print(f"✅ File saved to: {output_path}")
+
+@task
+def import_archive(c, url, archive_name=None, target_dir=".", drop_archive=False):
+    """
+    Download a remote archive (e.g. from Zenodo or Figshare) and extract its content with Datalad.
+
+    Parameters:
+        url (str): URL to the archive (e.g. .zip, .tar.gz). For Figshare-style links, explicitly provide
+                   `archive_name` if the URL does not end with the actual filename.
+        archive_name (str): Optional filename (default: basename of URL).
+        target_dir (str): Directory to extract into (default: current dir).
+        drop_archive (bool): Whether to drop the original archive from annex after extraction.
     """
     archive_name = archive_name or os.path.basename(url)
     archive_path = os.path.join(target_dir, archive_name)
 
-    print(f"🌐 Downloading archive: {url}")
-    c.run(f"datalad download-url -O {shlex.quote(archive_path)} {shlex.quote(url)}")
+    import_file(c, url, archive_path)
+
+    archive_exts = ['.zip', '.tar', '.tar.gz', '.tgz', '.tar.bz2', '.7z']
+    if not any(archive_path.endswith(ext) for ext in archive_exts):
+        print("⚠️ Skipping extraction — file does not appear to be a supported archive.")
+        return
 
     print(f"📦 Extracting archive content into {target_dir}...")
     c.run(f"datalad add-archive-content --delete --extract {shlex.quote(archive_path)} -d {shlex.quote(target_dir)}")
