@@ -15,6 +15,18 @@ def setup_env_python(c, reqs="requirements.txt"):
     print(f"🐍 Installing Python requirements from {reqs}...")
     c.run(f"pip install -r {reqs}")
 
+@task
+def ensure_submodule(c, path):
+    """
+    Ensure the airoh submodule is present and up to date.
+    """
+    if not os.path.exists(path) or not os.path.exists(os.path.join(path, ".git")):
+        print(f"📦 Initializing submodule at {path}...")
+        c.run(f"git submodule update --init --recursive {path}")
+    else:
+        print(f"🔄 Updating submodule at {path}...")
+        c.run(f"git submodule update --remote {path}")
+
 def clean_folder(dir_name, label=None):
     """
     Remove an entire directory recursively. Use with caution!!!

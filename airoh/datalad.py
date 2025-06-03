@@ -26,17 +26,26 @@ def get_data(c, name):
     print("✅ Done.")
 
 @task
-def import_file(c, url, output_file):
+def import_file_from_config(c, name):
     """
-    Download a single file using Datalad and save it to the given output path.
+    Download a file using its name from invoke.yaml -> files.<name>.
 
     Parameters:
-        url (str): URL to the file
-        output_file (str): Desired filename or full output path to save the downloaded file
+        name (str): Key from the 'files' section in invoke.yaml.
     """
-    print(f"🌐 Downloading file from: {url}")
-    c.run(f"datalad download-url -O {shlex.quote(output_path)} {shlex.quote(url)}")
-    print(f"✅ File saved to: {output_path}")
+    files = c.config.get("files", {})
+    if name not in files:
+        raise ValueError(f"❌ No file config found for '{name}' in invoke.yaml.")
+
+    entry = files[name]
+    url = entry.get("url")
+    output_file = entry.get("output_file")
+
+    if not url or not output_file:
+        raise ValueError(f"❌ Entry for '{name}' must define both 'url' and 'output_file'.")
+
+    c.run(f"datalad download-url -O {shlex.quote(output_file)} {shlex.quote(url)}")
+    print(f"✅ Downloaded {name} to {output_file}")
 
 @task
 def import_archive(c, url, archive_name=None, target_dir=".", drop_archive=False):
