@@ -15,7 +15,7 @@ pip install -e .
 
 ## Usage
 
-You can use `airoh` in your project simply by importing tasks in your `tasks.py` file. If the imported function is decorated with `@task`, `invoke` will automatically discover it.
+You can use `airoh` in your project simply by importing tasks in your `tasks.py` file. 
 
 ### Minimal Example
 
@@ -29,26 +29,6 @@ Now you can call:
 ```bash
 invoke run-figures
 invoke setup-env-python
-```
-
-### With Namespaced Collections
-
-If you prefer task grouping:
-
-```python
-from invoke import Collection
-from airoh import containers, utils
-
-ns = Collection()
-ns.add_collection(Collection.from_module(containers), name="containers")
-ns.add_collection(Collection.from_module(utils), name="utils")
-```
-
-This lets you call:
-
-```bash
-invoke containers.docker-run
-invoke utils.setup-env-python
 ```
 
 ## Available Tasks
