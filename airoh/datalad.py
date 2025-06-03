@@ -26,7 +26,7 @@ def get_data(c, name):
     print("✅ Done.")
 
 @task
-def import_file_from_config(c, name):
+def import_file(c, name):
     """
     Download a file using its name from invoke.yaml -> files.<name>.
 
