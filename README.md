@@ -1,5 +1,5 @@
 # airoh
-_Because reproducible science takes good tea and clean tasks_
+_Because reproducible science takes clean tasks. And why don't you have a cup of relaxing jasmin tea?_
 
 **airoh** is a lightweight Python task library built with [`invoke`](https://www.pyinvoke.org/), designed for reproducible research workflows. It provides pre-written, modular task definitions that can be easily reused in your own `tasks.py` file — no boilerplate, just useful automation.
 
