@@ -27,6 +27,21 @@ def ensure_submodule(c, path):
         print(f"🔄 Updating submodule at {path}...")
         c.run(f"git submodule update --remote {path}")
 
+@task
+def install_local(c, path):
+    """
+    Install a local Python package in editable mode using pip.
+
+    Parameters:
+        path (str): Path to the package directory (default: "airoh")
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"❌ Package path not found: {path}")
+
+    print(f"🔧 Installing package from {path} in editable mode...")
+    c.run(f"pip install -e {path}")
+    print("✅ Editable install complete.")
+
 def clean_folder(dir_name, label=None):
     """
     Remove an entire directory recursively. Use with caution!!!
