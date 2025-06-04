@@ -18,7 +18,10 @@ def setup_env_python(c, reqs="requirements.txt"):
 @task
 def ensure_submodule(c, path):
     """
-    Ensure the airoh submodule is present and up to date.
+    Ensure a git submodule is present and up to date.
+
+        Parameters:
+            path (str): Path to the submodule directory 
     """
     if not os.path.exists(path) or not os.path.exists(os.path.join(path, ".git")):
         print(f"📦 Initializing submodule at {path}...")
@@ -33,7 +36,7 @@ def install_local(c, path):
     Install a local Python package in editable mode using pip.
 
     Parameters:
-        path (str): Path to the package directory (default: "airoh")
+        path (str): Path to the package directory
     """
     if not os.path.exists(path):
         raise FileNotFoundError(f"❌ Package path not found: {path}")
@@ -42,9 +45,13 @@ def install_local(c, path):
     c.run(f"pip install -e {path}")
     print("✅ Editable install complete.")
 
-def clean_folder(dir_name, label=None):
+@task
+def clean_folder(c, dir_name, label=None):
     """
     Remove an entire directory recursively. Use with caution!!!
+    Parameters: 
+        dir_name (str): Path to be removed 
+        label (str, optional): label to use for path in the verbose
     """
     label = label or dir_name
     if os.path.exists(dir_name):

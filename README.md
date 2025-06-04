@@ -4,6 +4,10 @@ _Because reproducible science takes clean tasks. And why don't you have a cup of
 **airoh** is a lightweight Python task library built with [`invoke`](https://www.pyinvoke.org/), designed for reproducible research workflows. It provides pre-written, modular task definitions that can be easily reused in your own `tasks.py` file — no boilerplate, just useful automation.
 
 ## Installation
+Installation through PIP:
+```bash
+pip install airoh
+```
 
 For local deployment:
 
@@ -44,13 +48,16 @@ invoke setup-env-python
 
 ### From `utils.py`
 
+* `ensure_submodule` — Ensure a git submodule is present and up to date
+* `install_local` — Install a local Python package in editable mode using pip 
 * `setup-env-python` — Install Python dependencies from a file
 * `run-figures` — Run Jupyter notebooks to generate figures
-* `clean_folder(...)` — Utility to recursively delete directories (not a task)
+* `clean_folder` — Remove an entire directory recursively. Use with caution!!!
 
 ### From `datalad.py`
 * `get-data` — Install and retrieve a subdataset listed in `invoke.yaml`
 * `import-archive` — Download a remote archive (e.g. from Zenodo), extract its contents with `datalad`, and optionally drop the original file
+* `import-file` — Download a remote file (e.g. from Zenodo), using `datalad`
 
 ## Requirements
 
