@@ -47,6 +47,11 @@ def import_file(c, name):
     if not url or not output_file:
         raise ValueError(f"❌ Entry for '{name}' must define both 'url' and 'output_file'.")
 
+    output_path = Path(output_file)
+    if output_path.exists():
+        print(f"🫧 Skipping {name}: {output_file} already exists.")
+        return
+
     c.run(f"datalad download-url -O {shlex.quote(output_file)} {shlex.quote(url)}")
     print(f"✅ Downloaded {name} to {output_file}")
 

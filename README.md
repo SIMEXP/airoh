@@ -52,6 +52,7 @@ invoke setup-env-python
 * `install_local` — Install a local Python package in editable mode using pip 
 * `setup-env-python` — Install Python dependencies from a file
 * `run-figures` — Run Jupyter notebooks to generate figures
+* `ensure-dir-exist`: Creates a directory listed in `invoke.yaml` if it doesn't already exist.
 * `clean_folder` — Remove an entire directory recursively. Use with caution!!!
 
 ### From `datalad.py`

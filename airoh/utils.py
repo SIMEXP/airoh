@@ -46,19 +46,39 @@ def install_local(c, path):
     print("✅ Editable install complete.")
 
 @task
-def clean_folder(c, dir_name, label=None):
+def ensure_dir_exist(c, name):
     """
-    Remove an entire directory recursively. Use with caution!!!
-    Parameters: 
-        dir_name (str): Path to be removed 
-        label (str, optional): label to use for path in the verbose
+    Ensure the output_data_dir exists, create it if not.
     """
-    label = label or dir_name
+    output_dir = c.config.get(name)
+    if not isinstance(output_dir, str):
+        raise ValueError("❌ 'output_data_dir' not found or not a string in invoke.yaml")
+
+    output_path = Path(output_dir)
+    if not output_path.exists():
+        output_path.mkdir(parents=True)
+        print(f"📁 Created output directory: {output_path}")
+    else:
+        print(f"✅ Output directory already exists: {output_path}")
+
+@task
+def clean_folder(c, name):
+    """
+    Remove a directory specified in invoke.yaml using a key.
+
+    Parameters:
+        name (str): Key in invoke.yaml whose value is the directory path.
+        label (str, optional): Custom label for verbose output.
+    """
+    dir_name = c.config.get(name)
+    if not isinstance(dir_name, str):
+        raise ValueError(f"❌ Could not resolve a path from invoke config for key: '{name}'")
+
     if os.path.exists(dir_name):
         shutil.rmtree(dir_name)
-        print(f"💥 Removed {label} at {dir_name}")
+        print(f"💥 Removed {name} at {dir_name}")
     else:
-        print(f"🫧 Nothing to clean: {label}")
+        print(f"🫧 Nothing to clean: {name}")
 
 @task
 def run_figures(c, notebooks_path=None, figures_base=None):
