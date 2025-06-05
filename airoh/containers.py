@@ -16,13 +16,14 @@ def _set_image(c, image=None):
     return image
 
 @task
-def docker_build(c, image=None):
+def docker_build(c, image=None, no_cache=False):
     """
     Build the Docker image from the Dockerfile in the project root.
     """
     image = _set_image(c, image)
+    cache_flag = "--no-cache" if no_cache else "" 
     print(f"🐳 Building Docker image: {image}")
-    c.run(f"docker build -t {image} .")
+    c.run(f"docker build {cache_flag} -t {image} .")
 
 @task
 def docker_archive(c, image=None):
