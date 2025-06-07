@@ -62,26 +62,38 @@ def ensure_dir_exist(c, name):
         print(f"✅ Output directory already exists: {output_path}")
 
 @task
-def clean_folder(c, name):
+def clean_folder(c, name, pattern=None):
     """
-    Remove a directory specified in invoke.yaml using a key.
+    Remove files from a directory specified in invoke.yaml using a key.
 
     Parameters:
         name (str): Key in invoke.yaml whose value is the directory path.
-        label (str, optional): Custom label for verbose output.
+        pattern (str, optional): Glob pattern of files to delete (e.g., '*.png').
+                                 If not provided, the entire folder is removed.
     """
     dir_name = c.config.get(name)
     if not isinstance(dir_name, str):
         raise ValueError(f"❌ Could not resolve a path from invoke config for key: '{name}'")
 
-    if os.path.exists(dir_name):
+    if not os.path.exists(dir_name):
+        print(f"🫧 Nothing to clean: {name}")
+        return
+
+    if pattern:
+        path = Path(dir_name)
+        files = list(path.glob(pattern))
+        if not files:
+            print(f"🫧 No files matching '{pattern}' in {dir_name}")
+            return
+        for f in files:
+            f.unlink()
+            print(f"🧹 Removed: {f}")
+    else:
         shutil.rmtree(dir_name)
         print(f"💥 Removed {name} at {dir_name}")
-    else:
-        print(f"🫧 Nothing to clean: {name}")
 
 @task
-def run_figures(c, notebooks_path=None, figures_base=None):
+def run_figures(c, notebooks_path=None, figures_base=None, env=None):
     """
     Run figure notebooks, skipping any that already have output folders.
     Notebooks directory and output location pulled from invoke.yaml.
@@ -110,6 +122,6 @@ def run_figures(c, notebooks_path=None, figures_base=None):
             continue
 
         print(f"📈 Running {nb.name}...")
-        c.run(f"jupyter nbconvert --to notebook --execute --inplace {nb}")
+        c.run(f"jupyter nbconvert --to notebook --execute --inplace {nb}", env=env)
 
     print("🎉 All figure notebooks processed.")
